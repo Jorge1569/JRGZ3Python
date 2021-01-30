@@ -231,3 +231,11 @@ const_sqrt2 = '0 0000000 01101010000010'
 const_e = '0 0000001 01011011111100'
 
 const_eul_mas = '0 1111111 00100111100010'
+
+def roundZ3(num):
+    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    return dictZ3_to_float(float_to_dictZ3(a))
+
+def isZ3representable(num):
+    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    return num == roundZ3(num)
