@@ -2,50 +2,49 @@ speed = False
 
 def assert_shortZ3(text):
     if not(speed):
-        assert type(text) == str
-        assert len(text) == 22
+        assert type(text) == str, 'type(arg[0]) = {}'.format(type(text))
+        assert len(text) == 22, 'len(arg[0]) == {}'.format(len(text))
         for idx in range(22):
-            assert (text[idx] == '0') or (text[idx] == '1')
+            assert (text[idx] == '0') or (text[idx] == '1'), 'arg[0][{}] = {}'.format(idx, text[idx])
 
 def assert_longZ3(text):
     if not(speed):
-        assert type(text) == str
-        assert len(text) == 24
-        assert (text[0] == '0') or (text[0] == '1')
+        assert type(text) == str, 'type(arg[0]) = {}'.format(type(text))
+        assert len(text) == 24, 'len(arg[0]) == {}'.format(len(text))
+        assert (text[0] == '0') or (text[0] == '1'), 'arg[0][0] = {}'.format(text[0])
         for idx in range(2,9):
-            assert (text[idx] == '0') or (text[idx] == '1')
+            assert (text[idx] == '0') or (text[idx] == '1'), 'arg[0][{}] = {}'.format(idx, text[idx])
         for idx in range(10,24):
-            assert (text[idx] == '0') or (text[idx] == '1')
-        assert text[1] == ' '
-        assert text[9] == ' '
+            assert (text[idx] == '0') or (text[idx] == '1'), 'arg[0][{}] = {}'.format(idx, text[idx])
+        assert text[1] == ' ', 'arg[0][1] = {}'.format(text[1])
+        assert text[9] == ' ', 'arg[0][9] = {}'.format(text[9])
 
 def assert_hexZ3(text):
     if not(speed):
-        assert type(text) == str
-        assert len(text) == 6
+        assert type(text) == str, 'type(arg[0]) = {}'.format(type(text))
+        assert len(text) == 6, 'len(arg[0]) == {}'.format(len(text))
         for idx in range(1,6):
-            assert (ord(text[idx]) >= ord('0')) and (ord(text[idx]) <= ord('f'))
-            assert (ord(text[idx]) <= ord('9')) or (ord(text[idx]) >= ord('a'))
-        assert (ord(text[0]) >= ord('0')) and (ord(text[0]) <= ord('3'))
+            assert (ord(text[idx]) >= ord('0')) and (ord(text[idx]) <= ord('f')), 'arg[0][{}] = {}'.format(idx, text[idx])
+            assert (ord(text[idx]) <= ord('9')) or (ord(text[idx]) >= ord('a')), 'arg[0][{}] = {}'.format(idx, text[idx])
+        assert (ord(text[0]) >= ord('0')) and (ord(text[0]) <= ord('3')), 'arg[0][0] = {}'.format(text[0])
 
 def assert_dictZ3(my_dict):
     if not(speed):
-        assert type(my_dict) == dict
-        assert len(my_dict) == 22
+        assert type(my_dict) == dict, 'type(arg[0]) = {}'.format(type(my_dict))
+        assert len(my_dict) == 22, 'len(arg[0]) == {}'.format(len(my_dict))
         for idx in range(22):
-            assert type(my_dict[idx]) == bool
+            assert type(my_dict[idx]) == bool, 'type(arg[0][{}]) = {}'.format(idx, type(my_dict[idx]))
 
 def assert_memoryInt(num):
     if not(speed):
-        assert type(num) == int
-        assert num >= 0
-        assert num <= (2 ** 22) - 1
+        assert type(num) == int,  'type(arg[0]) = {}'.format(type(num))
+        assert num >= 0 and num <= (2 ** 22) - 1, 'arg[0] = {}'.format(num)
 
 def assert_floatZ3(num):
     if not(speed):
-        assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+        assert (type(num) == int) or (type(num) == float) or (type(num) == str), 'type(arg[0]) = {}'.format(type(num))
         if type(num) == str:
-            assert (num == 'zero') or (num == 'infinity')
+            assert (num == 'zero') or (num == 'infinity'), 'arg[0] = {}'.format(num)
 
 def shortZ3_to_longZ3(text):
     assert_shortZ3(text)
@@ -138,15 +137,17 @@ def memoryInt_to_dictZ3(num):
 
 def decbin(num,digits):
     if not(speed):
-        assert type(digits) == int
-        assert digits >= 1
-        assert type(num) == int
-        assert num >= 0 and num <= ((2 ** digits) - 1)
+        assert type(digits) == int, 'type(arg[1]) = {}'.format(type(digits))
+        assert digits >= 1, 'arg[1] = {}'.format(digits)
+        assert type(num) == int, 'type(arg[0]) = {}'.format(type(num))
+        assert num >= 0 and num <= ((2 ** digits) - 1), 'arg[0] = {}'.format(num)
     return (('0' * (digits - len(bin(num)[2:]))) + bin(num)[2:])
 
 def bindec(text):
     if not(speed):
-        assert type(text) == str
+        assert type(text) == str,'type(arg[0]) = {}'.format(type(text))
+        for idx in range(len(text)):
+            assert (text[idx] == '0') or (text[idx] == '1'), 'arg[0][{}] = {}'.format(idx, text[idx])
     return int(text,2)
 
 def shortZ3_to_float(text):
@@ -247,3 +248,51 @@ def isZ3representable(num):
     if num == 0:
         return True
     return num == roundZ3(num)
+
+def explore_shortZ3(text):
+    assert_shortZ3(text)
+    print('shortZ3\t\t= {}'.format(text))
+    print('longZ3\t\t= {}'.format(shortZ3_to_longZ3(text)))
+    print('hexZ3\t\t= {}'.format(shortZ3_to_hexZ3(text)))
+    print('memoryInt\t= {}'.format(shortZ3_to_memoryInt(text)))
+    print('float\t\t= {}'.format(shortZ3_to_float(text)))
+
+def explore_longZ3(text):
+    assert_longZ3(text)
+    print('shortZ3\t\t= {}'.format(longZ3_to_shortZ3(text)))
+    print('longZ3\t\t= {}'.format(text))
+    print('hexZ3\t\t= {}'.format(longZ3_to_hexZ3(text)))
+    print('memoryInt\t= {}'.format(longZ3_to_memoryInt(text)))
+    print('float\t\t= {}'.format(longZ3_to_float(text)))
+
+def explore_hexZ3(text):
+    assert_hexZ3(text)
+    print('shortZ3\t\t= {}'.format(hexZ3_to_shortZ3(text)))
+    print('longZ3\t\t= {}'.format(hexZ3_to_longZ3(text)))
+    print('hexZ3\t\t= {}'.format(text))
+    print('memoryInt\t= {}'.format(hexZ3_to_memoryInt(text)))
+    print('float\t\t= {}'.format(hexZ3_to_float(text)))
+
+def explore_dictZ3(my_dict):
+    assert_dictZ3(my_dict)
+    print('shortZ3\t\t= {}'.format(dictZ3_to_shortZ3(my_dict)))
+    print('longZ3\t\t= {}'.format(dictZ3_to_longZ3(my_dict)))
+    print('hexZ3\t\t= {}'.format(dictZ3_to_hexZ3(my_dict)))
+    print('memoryInt\t= {}'.format(dictZ3_to_memoryInt(my_dict)))
+    print('float\t\t= {}'.format(dictZ3_to_float(my_dict)))
+
+def explore_memoryInt(num):
+    assert_memoryInt(num)
+    print('shortZ3\t\t= {}'.format(memoryInt_to_shortZ3(num)))
+    print('longZ3\t\t= {}'.format(memoryInt_to_longZ3(num)))
+    print('hexZ3\t\t= {}'.format(memoryInt_to_hexZ3(num)))
+    print('memoryInt\t= {}'.format(num))
+    print('float\t\t= {}'.format(memoryInt_to_float(num)))
+
+def explore_float(num):
+    assert_floatZ3(num)
+    print('shortZ3\t\t= {}'.format(float_to_shortZ3(num)))
+    print('longZ3\t\t= {}'.format(float_to_longZ3(num)))
+    print('hexZ3\t\t= {}'.format(float_to_hexZ3(num)))
+    print('memoryInt\t= {}'.format(float_to_memoryInt(num)))
+    print('float\t\t= {}'.format(num))
