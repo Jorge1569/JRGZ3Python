@@ -177,7 +177,7 @@ def memoryInt_to_float(num):
 def float_to_shortZ3(num):
     assert (type(num) == int) or (type(num) == float) or (type(num) == str)
     tmp = num
-    if tmp == 'zero':
+    if tmp == 'zero' or tmp == 0:
         return '0100000000000000000000'
     if tmp == 'infinity':
         return '0011111100000000000000'
