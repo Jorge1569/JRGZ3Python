@@ -238,4 +238,6 @@ def roundZ3(num):
 
 def isZ3representable(num):
     assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    if num == 0:
+        return True
     return num == roundZ3(num)
