@@ -41,6 +41,12 @@ def assert_memoryInt(num):
         assert num >= 0
         assert num <= (2 ** 22) - 1
 
+def assert_floatZ3(num):
+    if not(speed):
+        assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+        if type(num) == str:
+            assert (num == 'zero') or (num == 'infinity')
+
 def shortZ3_to_longZ3(text):
     assert_shortZ3(text)
     return text[0] + ' ' + text[1:8] + ' ' + text[8:22]
@@ -175,7 +181,7 @@ def memoryInt_to_float(num):
     return shortZ3_to_float(memoryInt_to_shortZ3(num))
  
 def float_to_shortZ3(num):
-    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    assert_floatZ3(num)
     tmp = num
     if tmp == 'zero' or tmp == 0:
         return '0100000000000000000000'
@@ -205,19 +211,19 @@ def float_to_shortZ3(num):
     return tb
  
 def float_to_longZ3(num):
-    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    assert_floatZ3(num)
     return shortZ3_to_longZ3(float_to_shortZ3(num))
  
 def float_to_hexZ3(num):
-    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    assert_floatZ3(num)
     return shortZ3_to_hexZ3(float_to_shortZ3(num))
  
 def float_to_dictZ3(num):
-    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    assert_floatZ3(num)
     return shortZ3_to_dictZ3(float_to_shortZ3(num))
  
 def float_to_memoryInt(num):
-    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    assert_floatZ3(num)
     return shortZ3_to_memoryInt(float_to_shortZ3(num))
 
 const_max_num = '0 0111110 11111111111111'
@@ -233,11 +239,11 @@ const_e = '0 0000001 01011011111100'
 const_eul_mas = '0 1111111 00100111100010'
 
 def roundZ3(num):
-    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    assert_floatZ3(num)
     return dictZ3_to_float(float_to_dictZ3(a))
 
 def isZ3representable(num):
-    assert (type(num) == int) or (type(num) == float) or (type(num) == str)
+    assert_floatZ3(num)
     if num == 0:
         return True
     return num == roundZ3(num)
