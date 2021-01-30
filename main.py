@@ -236,7 +236,7 @@ const_sqrt2 = '0 0000000 01101010000010'
 
 const_e = '0 0000001 01011011111100'
 
-const_eul_mas = '0 1111111 00100111100010'
+const_euler_mascheroni = '0 1111111 00100111100010'
 
 def roundZ3(num):
     assert_floatZ3(num)
