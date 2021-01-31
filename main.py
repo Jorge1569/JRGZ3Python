@@ -422,11 +422,6 @@ def lm():
     global R2
     R1 = float_to_shortZ3(shortZ3_to_float(R1) * shortZ3_to_float(R2), 'floor')
 
-def lm():
-    global R1
-    global R2
-    R1 = float_to_shortZ3(shortZ3_to_float(R1) * shortZ3_to_float(R2), 'floor')
-
 def li():
     global R1
     global R2
