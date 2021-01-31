@@ -193,8 +193,9 @@ def memoryInt_to_float(num):
     assert_memoryInt(num)
     return shortZ3_to_float(memoryInt_to_shortZ3(num))
 
-def float_to_shortZ3(num):
+def float_to_shortZ3(num, round_mode = 'closer'):
     assert_floatZ3(num)
+    assert (round_mode == 'closer') or (round_mode == 'floor'), 'arg[1] = {}'.format(round_mode)
     tmp = num
     if tmp == 'zero' or tmp == 0:
         return '0100000000000000000000'
@@ -212,8 +213,10 @@ def float_to_shortZ3(num):
     mant = int(mant * (2 ** 14))
     min = (2 ** exp) * (mant / (2 ** 14) + 1)
     max = (2 ** exp) * ((mant + 1) / (2 ** 14) + 1)
-    if (max - tmp) < (tmp - min):
+    if (max - tmp) < (tmp - min) and round_mode == 'closer':
         mant = mant + 1
+    elif round_mode == 'floor':
+        mant = mant
     tb = ''
     if sign:
         tb = tb + '1'
@@ -222,7 +225,7 @@ def float_to_shortZ3(num):
     tb = tb + decbin(exp,7)
     tb = tb + decbin(mant,14)
     return tb
- 
+
 def float_to_longZ3(num):
     assert_floatZ3(num)
     return shortZ3_to_longZ3(float_to_shortZ3(num))
@@ -300,3 +303,188 @@ def explore_float(num):
         print('Exact')
     else:
         print('Approximate')
+
+def bit_shortZ3(text,bit):
+    assert_shortZ3(text)
+    if not(speed):
+        assert type(bit) == int, 'type(arg[1]) = {}'.format(type(bit))
+        assert bit >= 0, 'arg[1] = {}'.format(bit)
+    return text[bit] == '1'
+
+def bit_longZ3(text,bit):
+    assert_longZ3(text)
+    if not(speed):
+        assert type(bit) == int, 'type(arg[1]) = {}'.format(type(bit))
+        assert bit >= 0, 'arg[1] = {}'.format(bit)
+    return longZ3_to_shortZ3(text)[bit] == '1'
+
+def bit_hexZ3(text,bit):
+    assert_hexZ3(text)
+    if not(speed):
+        assert type(bit) == int, 'type(arg[1]) = {}'.format(type(bit))
+        assert bit >= 0, 'arg[1] = {}'.format(bit)
+    return hexZ3_to_shortZ3(text)[bit] == '1'
+
+def bit_dictZ3(text,bit):
+    assert_dictZ3(text)
+    if not(speed):
+        assert type(bit) == int, 'type(arg[1]) = {}'.format(type(bit))
+        assert bit >= 0, 'arg[1] = {}'.format(bit)
+    return dictZ3_to_shortZ3(text)[bit] == '1'
+
+def bit_memoryInt(text,bit):
+    assert_memoryInt(text)
+    if not(speed):
+        assert type(bit) == int, 'type(arg[1]) = {}'.format(type(bit))
+        assert bit >= 0, 'arg[1] = {}'.format(bit)
+    return memoryInt_to_shortZ3(text)[bit] == '1'
+
+def startZ3():
+    global stdin
+    global stdout
+    global cmd
+    global R1
+    global R2
+    global mem
+    stdin = '0'*22
+    stdout = '0'*22
+    cmd = False
+    R1 = '0'*22
+    R2 = '0'*22
+    mem = {}
+    for idx in range(64):
+        mem[idx] = '0'*22
+
+def showRegister():
+    assert_shortZ3(R1)
+    assert_shortZ3(R2)
+    print('R1 shortZ3\t= {}'.format(R1))
+    print('R1 longZ3\t= {}'.format(shortZ3_to_longZ3(R1)))
+    print('R1 hexZ3\t= {}'.format(shortZ3_to_hexZ3(R1)))
+    print('R1 memoryInt\t= {}'.format(shortZ3_to_memoryInt(R1)))
+    print('R1 float\t= {}\n'.format(shortZ3_to_float(R1)))
+    print('R2 shortZ3\t= {}'.format(R2))
+    print('R2 longZ3\t= {}'.format(shortZ3_to_longZ3(R2)))
+    print('R2 hexZ3\t= {}'.format(shortZ3_to_hexZ3(R2)))
+    print('R2 memoryInt\t= {}'.format(shortZ3_to_memoryInt(R2)))
+    print('R2 float\t= {}\n'.format(shortZ3_to_float(R2)))
+    if cmd:
+        print("R1 is NOT clear")
+    else:
+        print("R1 is clear")
+
+def lu():
+    global stdin
+    global R1
+    global R2
+    global cmd
+    tmp = input('Insert a number in stdin:\t')
+    if tmp == 'zero' or tmp == 'infinity':
+        stdin = float_to_shortZ3(tmp)
+    else:
+        stdin = float_to_shortZ3(float(tmp))
+        R1 = stdin
+        R2 = '0'*22
+        cmd = True
+
+def ld():
+    global stdout
+    global R1
+    global R2
+    global cmd
+    stdout = R1
+    R1 = '0'*22
+    R2 = '0'*22
+    cmd = False
+    print("Z3 returns {}".format(stdout))
+
+def pr(idx):
+    global R1
+    global R2
+    global cmd
+    global mem
+    if not(cmd):
+        R1 = mem[idx]
+        cmd = True
+    else:
+        R2 = mem[idx]
+
+def ps(idx):
+    global R1
+    global cmd
+    global mem
+    mem[idx] = R1
+    R1 = '0'*22
+    cmd = False
+
+def lm():
+    global R1
+    global R2
+    R1 = float_to_shortZ3(shortZ3_to_float(R1) * shortZ3_to_float(R2), 'floor')
+
+def lm():
+    global R1
+    global R2
+    R1 = float_to_shortZ3(shortZ3_to_float(R1) * shortZ3_to_float(R2), 'floor')
+
+def li():
+    global R1
+    global R2
+    if shortZ3_to_float(R2) == 'zero':
+        assert shortZ3_to_float(R1) != 'zero', '0/0'
+        assert shortZ3_to_float(R2) != 'zero', 'num/0'
+    R1 = float_to_shortZ3(shortZ3_to_float(R1) / shortZ3_to_float(R2), 'floor')
+    R2 = '0'*22
+
+def lw():
+    global R1
+    from math import sqrt
+    R1 = float_to_shortZ3(sqrt(shortZ3_to_float(R1)), 'floor')
+
+def ls1():
+    global R1
+    global R2
+    R1 = float_to_shortZ3(shortZ3_to_float(R1) + shortZ3_to_float(R2), 'floor')
+
+def ls2():
+    global R1
+    global R2
+    R1 = float_to_shortZ3(shortZ3_to_float(R1) - shortZ3_to_float(R2), 'floor')
+
+def clearAll():
+    ps(0)
+    ps(0)
+    pr(0)
+    pr(0)
+    for idx in range(64):
+        ps(idx)
+
+def clearSaveR2():
+    ps(0)
+    for idx in range(64):
+        ps(idx)
+
+def clear_from_to(start,end):
+    ps(start)
+    ps(start)
+    pr(start)
+    pr(start)
+    for idx in range(start,end+1):
+        ps(idx)
+
+def division_0_0():
+    clearAll()
+    ls2()
+    ps(0)
+    pr(0)
+    pr(0)
+    li()
+
+def division_1_0():
+    clearAll()
+    ls2()
+    ps(0)
+    pr(0)
+    pr(0)
+    ps(0)
+    li()
